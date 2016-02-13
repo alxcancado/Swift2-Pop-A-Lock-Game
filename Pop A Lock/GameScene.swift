@@ -17,6 +17,8 @@ class GameScene: SKScene {
     
     let zeroAngle: CGFloat = 0.0
     
+    var started = false
+    
     override func didMoveToView(view: SKView) {
         layoutGame()
     }
@@ -41,8 +43,24 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-       /* Called when a touch begins */
+        /* Called when a touch begins */
+        if !started {
+            runClockwise()
+            started = true
+        }
+    }
+    
+    func runClockwise(){
+        let dx = needle.position.x - self.frame.width/2
+        let dy = needle.position.y - self.frame.height/2
         
+        let radian = atan2(dx, dy)
+        
+        path = UIBezierPath(arcCenter: CGPoint(x: self.frame.width/2, y: self.frame.height/2), radius: 120, startAngle: radian, endAngle: radian + CGFloat(M_PI * 2), clockwise: true)
+        
+        let run = SKAction.followPath(path.CGPath, asOffset: false, orientToPath: true, duration: 5)
+        
+        needle.runAction(SKAction.repeatActionForever(run).reversedAction()) // .reverseaction just to run to another way
     }
    
     override func update(currentTime: CFTimeInterval) {
