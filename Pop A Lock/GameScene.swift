@@ -21,6 +21,7 @@ class GameScene: SKScene {
     
     var started = false
     var touches = false
+    var clockwise = Bool()
     
     override func didMoveToView(view: SKView) {
         layoutGame()
@@ -52,10 +53,13 @@ class GameScene: SKScene {
         if !started {
             runClockwise()
             started = true
+            clockwise = true
+        } else {
+            dotTouched()
         }
     }
     
-    func runClockwise(){
+    func runClockwise() {
         let dx = needle.position.x - self.frame.width/2
         let dy = needle.position.y - self.frame.height/2
         
@@ -67,6 +71,40 @@ class GameScene: SKScene {
         
         needle.runAction(SKAction.repeatActionForever(run).reversedAction()) // .reverseaction just to run to another way
     }
+
+    func runCounterClockwise() {
+        let dx = needle.position.x - self.frame.width/2
+        let dy = needle.position.y - self.frame.height/2
+        
+        let radian = atan2(dx, dy)
+        
+        path = UIBezierPath(arcCenter: CGPoint(x: self.frame.width/2, y: self.frame.height/2), radius: 120, startAngle: radian, endAngle: radian + CGFloat(M_PI * 2), clockwise: true)
+        
+        let run = SKAction.followPath(path.CGPath, asOffset: false, orientToPath: true, duration: 5)
+        
+        needle.runAction(SKAction.repeatActionForever(run)) // .reverseaction just to run to another way
+    }
+    
+    func dotTouched(){
+        if touches == true {
+            touches = false
+            dot.removeFromParent()
+            newDot()
+            
+            if clockwise {
+                runCounterClockwise()
+                clockwise = false
+            } else {
+                runClockwise()
+                clockwise = true
+            }
+        } else {
+            started = false
+            touches = false
+            gameOver()
+        }
+    }
+
     
     func newDot(){
         dot = SKShapeNode(circleOfRadius: 15.0)
@@ -78,10 +116,20 @@ class GameScene: SKScene {
         
         let radian = atan2(dx, dy)
         
-        let tempAngle = CGFloat.random(radian + 1.0, max: radian - 2.5)
-        let tempPath = UIBezierPath(arcCenter: CGPoint(x: self.frame.width/2, y: self.frame.height/2), radius: 120, startAngle: tempAngle, endAngle: tempAngle + CGFloat(M_PI * 2), clockwise: true)
+        if clockwise {
+            let tempAngle = CGFloat.random(radian + 1.0, max: radian - 2.5)
+            let tempPath = UIBezierPath(arcCenter: CGPoint(x: self.frame.width/2, y: self.frame.height/2), radius: 120, startAngle: tempAngle, endAngle: tempAngle + CGFloat(M_PI * 2), clockwise: true)
+            
+            dot.position = tempPath.currentPoint
+
+        } else {
+            let tempAngle = CGFloat.random(radian - 1.0, max: radian - 2.5)
+            let tempPath = UIBezierPath(arcCenter: CGPoint(x: self.frame.width/2, y: self.frame.height/2), radius: 120, startAngle: tempAngle, endAngle: tempAngle + CGFloat(M_PI * 2), clockwise: true)
+            
+            dot.position = tempPath.currentPoint
+
+        }
         
-        dot.position = tempPath.currentPoint
         self.addChild(dot)
     }
     
@@ -92,6 +140,7 @@ class GameScene: SKScene {
         
         self.scene?.runAction(SKAction.sequence([actionRed, actionBack]), completion: { () -> Void in
             self.removeAllChildren()
+            self.clockwise = false
             self.layoutGame() // start a new game
             
         })
