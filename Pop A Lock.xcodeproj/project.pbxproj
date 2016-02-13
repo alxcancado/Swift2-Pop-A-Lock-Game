@@ -13,6 +13,7 @@
 		648357781C6ECC35003E80BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 648357761C6ECC35003E80BC /* Main.storyboard */; };
 		6483577A1C6ECC35003E80BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 648357791C6ECC35003E80BC /* Assets.xcassets */; };
 		6483577D1C6ECC35003E80BC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6483577B1C6ECC35003E80BC /* LaunchScreen.storyboard */; };
+		648357851C6ED9C9003E80BC /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648357841C6ED9C9003E80BC /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		648357791C6ECC35003E80BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6483577C1C6ECC35003E80BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6483577E1C6ECC35003E80BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		648357841C6ED9C9003E80BC /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				6483576E1C6ECC35003E80BC /* AppDelegate.swift */,
 				648357721C6ECC35003E80BC /* GameScene.swift */,
+				648357841C6ED9C9003E80BC /* Extensions.swift */,
 				648357741C6ECC35003E80BC /* GameViewController.swift */,
 				648357761C6ECC35003E80BC /* Main.storyboard */,
 				648357791C6ECC35003E80BC /* Assets.xcassets */,
@@ -141,6 +144,7 @@
 				648357731C6ECC35003E80BC /* GameScene.swift in Sources */,
 				648357751C6ECC35003E80BC /* GameViewController.swift in Sources */,
 				6483576F1C6ECC35003E80BC /* AppDelegate.swift in Sources */,
+				648357851C6ED9C9003E80BC /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

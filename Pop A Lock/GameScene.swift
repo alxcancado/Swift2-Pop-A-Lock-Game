@@ -12,6 +12,8 @@ class GameScene: SKScene {
     
     var lock = SKShapeNode()
     var needle = SKShapeNode()
+    var dot = SKShapeNode()
+    
     
     var path = UIBezierPath()
     
@@ -40,6 +42,8 @@ class GameScene: SKScene {
         needle.zRotation = 3.14 / 2 //90 degrees
         needle.zPosition = 2.0 //top of the circle
         self.addChild(needle)
+        
+        newDot()
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -61,6 +65,23 @@ class GameScene: SKScene {
         let run = SKAction.followPath(path.CGPath, asOffset: false, orientToPath: true, duration: 5)
         
         needle.runAction(SKAction.repeatActionForever(run).reversedAction()) // .reverseaction just to run to another way
+    }
+    
+    func newDot(){
+        dot = SKShapeNode(circleOfRadius: 15.0)
+        dot.fillColor = SKColor(red: 31.0/255.0, green: 150.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+        dot.strokeColor = SKColor.clearColor()
+        
+        let dx = needle.position.x - self.frame.width/2
+        let dy = needle.position.y - self.frame.height/2
+        
+        let radian = atan2(dx, dy)
+        
+        let tempAngle = CGFloat.random(radian + 1.0, max: radian - 2.5)
+        let tempPath = UIBezierPath(arcCenter: CGPoint(x: self.frame.width/2, y: self.frame.height/2), radius: 120, startAngle: tempAngle, endAngle: tempAngle + CGFloat(M_PI * 2), clockwise: true)
+        
+        dot.position = tempPath.currentPoint
+        self.addChild(dot)
     }
    
     override func update(currentTime: CFTimeInterval) {
