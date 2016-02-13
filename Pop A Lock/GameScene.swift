@@ -26,13 +26,16 @@ class GameScene: SKScene {
     var level = 1
     var dots = 0
     
+    var levelLabel = SKLabelNode()
+    var currentScoreLabel = SKLabelNode()
+    
     
     override func didMoveToView(view: SKView) {
         layoutGame()
     }
     
     func layoutGame() {
-        backgroundColor = SKColor.whiteColor()
+        backgroundColor = SKColor(red: 26.0/255.0, green:188.0/255.0, blue: 156.0/255.0,  alpha: 1.0)
         
         path = UIBezierPath(arcCenter: CGPoint(x: self.frame.size.width/2, y: self.frame.height/2), radius: 120, startAngle: zeroAngle, endAngle: zeroAngle + CGFloat(M_PI * 2), clockwise: true)
         
@@ -49,12 +52,26 @@ class GameScene: SKScene {
         needle.zPosition = 2.0 //top of the circle
         self.addChild(needle)
         
+        levelLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        levelLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2 + self.frame.height/3)
+        levelLabel.fontColor = SKColor(red: 236.0/255.0, green: 240.0/255.0, blue: 241.0/255.0, alpha: 1.0)
+        levelLabel.text = "Level \(level)"
+        
+        currentScoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        currentScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
+        currentScoreLabel.fontColor = SKColor(red: 236.0/255.0, green: 240.0/255.0, blue: 241.0/255.0, alpha: 1.0)
+        currentScoreLabel.text = "Tap!"
+        
+        self.addChild(levelLabel)
+        self.addChild(currentScoreLabel)
+        
         newDot()
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         /* Called when a touch begins */
         if !started {
+            currentScoreLabel.text = "\(level - dots)"
             runClockwise()
             started = true
             clockwise = true
@@ -93,6 +110,7 @@ class GameScene: SKScene {
         if touches == true {
             touches = false
             dots++
+            updateLabel()
             if dots >= level{
                 started = false
                 completed()
@@ -145,8 +163,10 @@ class GameScene: SKScene {
     
     func completed(){
         needle.removeFromParent()
-        let actionRed = SKAction.colorizeWithColor(UIColor.greenColor(), colorBlendFactor: 1.0, duration: 0.25)
-        let actionBack = SKAction.colorizeWithColor(UIColor.whiteColor(), colorBlendFactor: 1.0, duration: 0.25)
+                currentScoreLabel.text = "Won!"
+        
+        let actionRed = SKAction.colorizeWithColor(UIColor(red: 46.0/255.0, green: 204.0/255.0, blue: 113.0/255.0, alpha: 1.0), colorBlendFactor: 1.0, duration: 0.25)
+        let actionBack = SKAction.waitForDuration(0.5)
         
         self.scene?.runAction(SKAction.sequence([actionRed, actionBack]), completion: { () -> Void in
             self.removeAllChildren()
@@ -161,8 +181,10 @@ class GameScene: SKScene {
     
     func gameOver(){
         needle.removeFromParent()
-        let actionRed = SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.25)
-        let actionBack = SKAction.colorizeWithColor(UIColor.whiteColor(), colorBlendFactor: 1.0, duration: 0.25)
+        currentScoreLabel.text = "Fail!"
+        
+        let actionRed = SKAction.colorizeWithColor(UIColor(red: 149.0/255.0, green: 165.0/255.0, blue: 166.0/255.0, alpha: 1.0), colorBlendFactor: 1.0, duration: 0.25)
+        let actionBack = SKAction.waitForDuration(0.5)
         
         self.scene?.runAction(SKAction.sequence([actionRed, actionBack]), completion: { () -> Void in
             self.removeAllChildren()
@@ -171,6 +193,10 @@ class GameScene: SKScene {
             self.layoutGame() // start a new game
             
         })
+    }
+    
+    func updateLabel(){
+        currentScoreLabel.text = "\(level - dots)"
     }
    
     override func update(currentTime: CFTimeInterval) {
