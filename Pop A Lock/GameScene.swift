@@ -23,6 +23,10 @@ class GameScene: SKScene {
     var touches = false
     var clockwise = Bool()
     
+    var level = 1
+    var dots = 0
+    
+    
     override func didMoveToView(view: SKView) {
         layoutGame()
     }
@@ -88,6 +92,12 @@ class GameScene: SKScene {
     func dotTouched(){
         if touches == true {
             touches = false
+            dots++
+            if dots >= level{
+                started = false
+                completed()
+                return
+            }
             dot.removeFromParent()
             newDot()
             
@@ -133,6 +143,22 @@ class GameScene: SKScene {
         self.addChild(dot)
     }
     
+    func completed(){
+        needle.removeFromParent()
+        let actionRed = SKAction.colorizeWithColor(UIColor.greenColor(), colorBlendFactor: 1.0, duration: 0.25)
+        let actionBack = SKAction.colorizeWithColor(UIColor.whiteColor(), colorBlendFactor: 1.0, duration: 0.25)
+        
+        self.scene?.runAction(SKAction.sequence([actionRed, actionBack]), completion: { () -> Void in
+            self.removeAllChildren()
+            self.clockwise = false
+            self.dots = 0
+            self.level++
+            self.layoutGame() // start a new game
+            
+        })
+    }
+
+    
     func gameOver(){
         needle.removeFromParent()
         let actionRed = SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.25)
@@ -141,6 +167,7 @@ class GameScene: SKScene {
         self.scene?.runAction(SKAction.sequence([actionRed, actionBack]), completion: { () -> Void in
             self.removeAllChildren()
             self.clockwise = false
+            self.dots = 0
             self.layoutGame() // start a new game
             
         })
