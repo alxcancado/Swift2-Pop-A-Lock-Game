@@ -20,6 +20,7 @@ class GameScene: SKScene {
     let zeroAngle: CGFloat = 0.0
     
     var started = false
+    var touches = false
     
     override func didMoveToView(view: SKView) {
         layoutGame()
@@ -83,8 +84,42 @@ class GameScene: SKScene {
         dot.position = tempPath.currentPoint
         self.addChild(dot)
     }
+    
+    func gameOver(){
+        needle.removeFromParent()
+        let actionRed = SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.25)
+        let actionBack = SKAction.colorizeWithColor(UIColor.whiteColor(), colorBlendFactor: 1.0, duration: 0.25)
+        
+        self.scene?.runAction(SKAction.sequence([actionRed, actionBack]), completion: { () -> Void in
+            self.removeAllChildren()
+            self.layoutGame() // start a new game
+            
+        })
+    }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        if started {
+            if needle.intersectsNode(dot){
+                touches = true
+            } else {
+                if touches == true {
+                    if !needle.intersectsNode(dot){
+                        started = false
+                        touches = false
+                        gameOver()
+                    }
+                    
+                }
+            }
+        
+        }
+        
+        
+        
+        
+        
+        
+        
     }
 }
